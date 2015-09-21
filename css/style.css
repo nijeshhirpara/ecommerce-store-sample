@@ -19,6 +19,33 @@ footer{
 	height: 50px;
 }
 
+#paging{
+	text-align: center;
+	padding: 10px 0;
+}
+
+.product{
+	padding: 12px;
+	border: 1px solid #999966;
+    margin: 10px 24px;
+    border-radius: 1em;
+    width: 150px;
+    text-align: center;
+}
+
+.product img{
+	width: 150px;
+    border-radius: 1em;
+}
+
+.product a{
+	overflow-x: hidden;
+    width: 150px;
+    display: block;
+    height: 20px;
+    text-decoration: none;
+}
+
 nav{
 	background-color: #999966;
 }

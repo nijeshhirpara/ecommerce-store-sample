@@ -19,5 +19,3 @@ switch($route)
 	default:			get_home();
 }
 
-
-?>

@@ -8,6 +8,8 @@
 
 	$db_con = mysql_connect($db_host,$username,$password);
 
+	global $mysqli;
+
 	$mysqli = new mysqli($db_host, $username, $password, $db_name);
 	
 	if (!$db_con) {
