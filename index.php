@@ -55,7 +55,7 @@ include_once('PHP/dbconfig.php');
 					<?php
 
 
-							$sql = "select Category from product where 1 group by Category order by Category ASC";
+							$sql = "select CatId, Category from product where 1 group by Category order by Category ASC";
 
 							$result = mysql_query($sql);
 
@@ -64,7 +64,7 @@ include_once('PHP/dbconfig.php');
 
 								while($row = mysql_fetch_array($result)){
 
-									echo "<li><a href='index.php?route=HOME&cat=".$row['Category']."''>".$row['Category']."</a></li>";
+									echo "<li><a href='index.php?route=HOME&cat=".$row['CatId']."''>".$row['Category']."</a></li>";
 
 								}
 							}

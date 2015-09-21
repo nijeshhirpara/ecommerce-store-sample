@@ -11,10 +11,13 @@ if(isset($_GET['route'])){
 switch($route)
 {
 	case 'HOME':		get_home();
-							break;
+						break;
 
 	case 'UPLOAD':		get_upload();
-							break;
+						break;
+
+	case 'PRODUCT':		get_product();
+						break;
 
 	default:			get_home();
 }

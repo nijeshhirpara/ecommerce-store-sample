@@ -1,11 +1,61 @@
 <?php
 
+	function get_product(){
+
+		//Paginate
+
+		if(isset($_GET['id']) AND $_GET['id']!=''){
+
+			$id = filter_var($_GET['id'], FILTER_VALIDATE_INT);
+
+
+	    	$result = mysqli_query($GLOBALS['mysqli'],"select * from product where Id=".$id);
+
+	    	if($result){
+
+				while($row = mysqli_fetch_assoc($result)){
+
+					$id = filter_var($row['Id'], FILTER_VALIDATE_INT);
+					$productName = filter_var($row['Product Name']);
+					$Price = filter_var($row['Price'], FILTER_VALIDATE_INT);
+
+					?>
+						<div class="product fl">
+	 						<img src="images/product.jpg">
+	 						<br/>
+	 						<a href="#"><?php echo $productName; ?></a>
+	 						<span>Price: <?php echo $Price; ?></span>
+						</div>
+					<?php
+
+				}
+			}
+
+			echo "<div class='clear'><div/>";
+
+
+		}
+
+		
+	}
+
 	function get_home(){
 
 		//Paginate
 
+		if(isset($_GET['cat']) AND $_GET['cat']!=''){
+
+			$cat = filter_var($_GET['cat'], FILTER_VALIDATE_INT);
+
+			$where= " where CatID = ".$cat;
+
+		}else{
+
+			$where= " where 1";
+		}
+
 		// Find out how many items are in the table
-	    $resc = mysqli_query($GLOBALS['mysqli'],"select * from product where 1");
+	    $resc = mysqli_query($GLOBALS['mysqli'],"select * from product".$where);
 	    $total = mysqli_num_rows($resc);
 
 	    // How many items to list per page
@@ -21,6 +71,7 @@
 	            'min_range' => 1,
 	        ),
 	    )));
+
 
 	    // Calculate the offset for the query
 	    $offset = ($page - 1)  * $limit;
@@ -38,7 +89,9 @@
 	    
 
 	    //Fetch Product from db
-		$sql = "select * from product where 1 order by Id ASC limit ".$offset.",".$limit;
+		$sql = "select * from product".$where;
+
+		$sql.= " order by Id ASC limit ".$offset.",".$limit;
 
 		$result = mysqli_query($GLOBALS['mysqli'],$sql);
 
@@ -46,14 +99,14 @@
 
 			while($row = mysqli_fetch_assoc($result)){
 
-				$id = filter_var($row['ID'], FILTER_VALIDATE_INT);
-				$productName = filter_var($row['Product Name'], FILTER_VALIDATE_STRING);
+				$id = filter_var($row['Id'], FILTER_VALIDATE_INT);
+				$productName = filter_var($row['Product Name']);
 
 				?>
 					<div class="product fl">
  						<img src="images/product.jpg">
  						<br/>
- 						<a href="<?php echo $id; ?>"><?php echo $productName; ?></a>
+ 						<a href="index.php?route=PRODUCT&id=<?php echo $id; ?>"><?php echo $productName; ?></a>
 					</div>
 				<?php
 
@@ -132,30 +185,3 @@
 		<?php
 	}
 	
-	
-	function addContact(){
-
-		$field = array();
-		$val = array();
-		foreach ($_POST as $key => $value) {
-
-			if(!empty($value)){
-				array_push($field, $key);
-				array_push($val, $value);
-			}else{
-				echo '<p class="errorMessage">Please fill all fields properly.</p>';
-				return;
-			}
-				
-		}
-
-		$sql = 'insert into contact ('.implode(",",$field).',time) values ("'.implode('","',$val).'",NOW())';
-
-		$result = mysql_query($sql);
-
-		if(!$result){
-			echo '<p class="errorMessage">Please fill all fields properly.</p>';
-		}else{
-			echo '<p class="message">Thank you for initiating contact, our sales team will get back to you ASAP.</p>';
-		}
-	}
