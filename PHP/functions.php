@@ -46,13 +46,14 @@
 
 			while($row = mysqli_fetch_assoc($result)){
 
-				
+				$id = filter_var($row['ID'], FILTER_VALIDATE_INT);
+				$productName = filter_var($row['Product Name'], FILTER_VALIDATE_STRING);
 
 				?>
 					<div class="product fl">
  						<img src="images/product.jpg">
  						<br/>
- 						<a href="<?php echo $row['Id']; ?>"><?php echo $row['Product Name']; ?></a>
+ 						<a href="<?php echo $id; ?>"><?php echo $productName; ?></a>
 					</div>
 				<?php
 
@@ -69,6 +70,56 @@
 	}
 
 	function get_upload(){
+
+		if (isset($_POST['submit'])) {
+
+		    $tmp = $_FILES['fileToUpload']['tmp_name'];
+		    $name = $_FILES['fileToUpload']['name'];
+
+		    //Can be any full path, just don't end with a /. That will be added in in the path variable
+		    $uploads_dir = $_SERVER['DOCUMENT_ROOT'].'/ecom/uploads';
+
+		    $path = $uploads_dir.'/'.$name;
+
+		    if(move_uploaded_file($tmp, $path)){
+		        echo "<br><center><p>". $name ."</p></center>";
+
+		        //Import uploaded file to Database
+		        $import = "LOAD DATA INFILE '".$path."'
+		               IGNORE INTO TABLE product  CHARACTER SET utf8 FIELDS TERMINATED BY ','
+		               OPTIONALLY ENCLOSED BY '\"' IGNORE 1 LINES (`ProductID`, `Category`, `Product Name`, `Price`);
+		        ";
+
+		        mysqli_query($GLOBALS['mysqli'],$import) or die(mysqli_error($GLOBALS['mysqli']));
+		        
+		        mysqli_query($GLOBALS['mysqli'],"INSERT IGNORE INTO `category`(`Category`) SELECT Category from product where 1 group by Category") or die(mysqli_error($GLOBALS['mysqli']));
+
+		        $sql = "SELECT CatId, Category from category where 1";
+		        $result = mysqli_query($GLOBALS['mysqli'],$sql) or die(mysqli_error($GLOBALS['mysqli']));
+
+		        if($result){
+
+					while($row = mysqli_fetch_assoc($result)){
+
+						$id = filter_var($row['CatId'], FILTER_VALIDATE_INT);
+						$productName = filter_var($row['Category']);
+						$up = "UPDATE `product` SET CatID='".$row['CatId']."' WHERE `CatID` = '' AND `Category`='".$row['Category']."'";
+						mysqli_query($GLOBALS['mysqli'],$up) or die(mysqli_error($GLOBALS['mysqli']));
+
+					}
+				}
+
+
+		        echo 'File Uploaded successfully';
+
+		        //If you do not want to keep the csv, you can delete it after this point.
+		        //unlink($path);
+
+		    }else{
+		        echo 'Failed to move uploaded files';
+		    }
+
+		}
 
 		?>
 
