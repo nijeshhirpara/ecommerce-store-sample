@@ -91,7 +91,7 @@
 	    //Fetch Product from db
 		$sql = "select * from product".$where;
 
-		$sql.= " order by Id ASC limit ".$offset.",".$limit;
+		$sql.= " order by `Product Name` ASC limit ".$offset.",".$limit;
 
 		$result = mysqli_query($GLOBALS['mysqli'],$sql);
 
