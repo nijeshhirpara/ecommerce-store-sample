@@ -12,5 +12,9 @@ It has following functionalities,
 
 To Run this APP, install ecomm.sql dump on MySQL, configure database connection in PHP/dbcpnfig.php file and run the root directory on server.
 
+Code climate analysis
+
+<a href="https://codeclimate.com/repos/55ffe24ee30ba0558d001ffe/feed"><img src="https://codeclimate.com/repos/55ffe24ee30ba0558d001ffe/badges/c81af06e603a83229d86/gpa.svg" /></a>
+
  
 
